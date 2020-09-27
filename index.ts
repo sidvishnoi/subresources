@@ -30,6 +30,7 @@ export async function* getAllSubResources(
 		}
 
 		yield* await getStyleSheets(page);
+		yield* await getImportedStyleSheets(page);
 		yield* await getScripts(page);
 		yield* await getMedia(page);
 		yield* await getIframes(page);
@@ -51,6 +52,25 @@ async function getStyleSheets(page: Page) {
 			};
 		});
 	});
+}
+
+async function getImportedStyleSheets(page: Page) {
+	return await page.evaluate((pageURL: string) => {
+		const importedStylesheets = [];
+		for (const stylesheet of document.styleSheets) {
+			const baseURL = stylesheet.href || pageURL;
+			for (const rule of stylesheet.cssRules) {
+				if (rule instanceof CSSImportRule) {
+					const url = new URL(rule.href, baseURL).href;
+					importedStylesheets.push({
+						type: ResourceType.stylesheet as const,
+						url,
+					});
+				}
+			}
+		}
+		return importedStylesheets;
+	}, page.url());
 }
 
 async function getScripts(page: Page) {
