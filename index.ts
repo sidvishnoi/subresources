@@ -33,6 +33,7 @@ export async function* getAllSubResources(
 		yield* await getScripts(page);
 		yield* await getMedia(page);
 		yield* await getIframes(page);
+		yield* await getMiscResources(page);
 	} catch (error) {
 		caughtError = error;
 	} finally {
@@ -132,4 +133,19 @@ async function getIframes(page: Page) {
 		}
 		return iframes;
 	});
+}
+
+async function getMiscResources(page: Page) {
+	const manifest = await page
+		.$eval(`link[rel="manifest"]`, elem => {
+			return {
+				type: ResourceType.manifest as const,
+				url: (elem as HTMLLinkElement).href,
+			};
+		})
+		.catch(() => null);
+
+	return [manifest].filter(
+		(resource): resource is NonNullable<typeof resource> => resource !== null,
+	);
 }
