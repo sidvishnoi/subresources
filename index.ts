@@ -33,6 +33,7 @@ export async function* getAllSubResources(
 		yield* await getImportedStyleSheets(page);
 		yield* await getScripts(page);
 		yield* await getMedia(page);
+		yield* await getStyleSheetImages(page);
 		yield* await getIframes(page);
 		yield* await getMiscResources(page);
 	} catch (error) {
@@ -140,6 +141,31 @@ async function getMedia(page: Page) {
 	);
 
 	return [...mediaSources, ...imageSrcSets];
+}
+
+async function getStyleSheetImages(page: Page) {
+	return await page.evaluate((pageURL: string) => {
+		const urls = [];
+		for (const stylesheet of document.styleSheets) {
+			const baseURL = stylesheet.href || pageURL;
+			for (const rule of stylesheet.cssRules) {
+				if (rule instanceof CSSStyleRule && rule.style.backgroundImage) {
+					urls.push(
+						...rule.style.backgroundImage
+							.split(",")
+							.map(s => s.match(/url\("([^)]+)"\)/))
+							.map(s => (s ? s[1].trim() : undefined))
+							.filter((s): s is string => !!s)
+							.map(url => new URL(url, baseURL).href),
+					);
+				}
+			}
+		}
+		return urls.map(url => ({
+			type: ResourceType.image as const,
+			url,
+		}));
+	}, page.url());
 }
 
 async function getIframes(page: Page) {
