@@ -7,6 +7,7 @@ export const enum ResourceType {
 	video = "video",
 	audio = "audio",
 	iframe = "iframe",
+	font = "font",
 	manifest = "manifest",
 }
 
@@ -34,6 +35,7 @@ export async function* getAllSubResources(
 		yield* await getScripts(page);
 		yield* await getMedia(page);
 		yield* await getStyleSheetImages(page);
+		yield* await getFonts(page);
 		yield* await getIframes(page);
 		yield* await getMiscResources(page);
 	} catch (error) {
@@ -163,6 +165,41 @@ async function getStyleSheetImages(page: Page) {
 		}
 		return urls.map(url => ({
 			type: ResourceType.image as const,
+			url,
+		}));
+	}, page.url());
+}
+
+async function getFonts(page: Page) {
+	return await page.evaluate((pageURL: string) => {
+		const isCrossOrigin = (s: StyleSheet) =>
+			s.href && new URL(s.href, pageURL).origin !== new URL(pageURL).origin;
+
+		const urls = [];
+		for (const stylesheet of document.styleSheets) {
+			if (isCrossOrigin(stylesheet)) {
+				// Can't read rules from cross-origin stylesheet.
+				continue;
+			}
+
+			const baseURL = stylesheet.href || pageURL;
+			for (const rule of stylesheet.cssRules) {
+				if (rule instanceof CSSFontFaceRule && (rule.style as any).src) {
+					const src = (rule.style as any).src as string;
+					urls.push(
+						...src
+							.split(",")
+							.map(s => s.match(/url\("([^)]+)"\)/))
+							.map(s => (s ? s[1].trim() : undefined))
+							.filter((s): s is string => !!s)
+							.map(url => new URL(url, baseURL).href),
+					);
+				}
+			}
+		}
+
+		return urls.map(url => ({
+			type: ResourceType.font as const,
 			url,
 		}));
 	}, page.url());
