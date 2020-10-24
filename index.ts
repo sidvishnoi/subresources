@@ -47,7 +47,7 @@ export async function* getAllSubResources(
 }
 
 async function getStyleSheets(page: Page) {
-	return await page.$$eval(`link[rel="stylesheet"]`, elems => {
+	return await page.$$eval(`link[rel~="stylesheet"]`, elems => {
 		return (elems as HTMLLinkElement[]).map(elem => {
 			return {
 				type: ResourceType.stylesheet as const,
@@ -220,7 +220,7 @@ async function getIframes(page: Page) {
 
 async function getMiscResources(page: Page) {
 	const manifest = await page
-		.$eval(`link[rel="manifest"]`, elem => {
+		.$eval(`link[rel~="manifest"]`, elem => {
 			return {
 				type: ResourceType.manifest as const,
 				url: (elem as HTMLLinkElement).href,
