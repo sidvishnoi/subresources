@@ -61,6 +61,12 @@ async function getImportedStyleSheets(page: Page) {
 	return await page.evaluate((pageURL: string) => {
 		const importedStylesheets = [];
 		for (const stylesheet of document.styleSheets) {
+			try {
+				// Cannot read cssRules in cross-origin stylesheets
+				stylesheet.cssRules;
+			} catch {
+				continue;
+			}
 			const baseURL = stylesheet.href || pageURL;
 			for (const rule of stylesheet.cssRules) {
 				if (rule instanceof CSSImportRule) {
@@ -149,6 +155,12 @@ async function getStyleSheetImages(page: Page) {
 	return await page.evaluate((pageURL: string) => {
 		const urls = [];
 		for (const stylesheet of document.styleSheets) {
+			try {
+				// Cannot read cssRules in cross-origin stylesheets
+				stylesheet.cssRules;
+			} catch {
+				continue;
+			}
 			const baseURL = stylesheet.href || pageURL;
 			for (const rule of stylesheet.cssRules) {
 				if (rule instanceof CSSStyleRule && rule.style.backgroundImage) {
@@ -172,13 +184,12 @@ async function getStyleSheetImages(page: Page) {
 
 async function getFonts(page: Page) {
 	return await page.evaluate((pageURL: string) => {
-		const isCrossOrigin = (s: StyleSheet) =>
-			s.href && new URL(s.href, pageURL).origin !== new URL(pageURL).origin;
-
 		const urls = [];
 		for (const stylesheet of document.styleSheets) {
-			if (isCrossOrigin(stylesheet)) {
-				// Can't read rules from cross-origin stylesheet.
+			try {
+				// Cannot read cssRules in cross-origin stylesheets
+				stylesheet.cssRules;
+			} catch {
 				continue;
 			}
 
