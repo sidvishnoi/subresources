@@ -9,6 +9,7 @@
 		"prepare": "tsc -p tsconfig.json",
 		"start": "tsc -p tsconfig.json --watch"
 	},
+	"files": ["index.js"],
 	"dependencies": {
 		"puppeteer": "^7"
 	},
