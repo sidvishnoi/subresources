@@ -1,4 +1,5 @@
-import puppeteer, { Page } from "puppeteer";
+import puppeteer from "puppeteer";
+import { Page } from "puppeteer/lib/cjs/puppeteer/common/Page";
 
 export const enum ResourceType {
 	stylesheet = "stylesheet",
@@ -58,7 +59,7 @@ async function getStyleSheets(page: Page) {
 }
 
 async function getImportedStyleSheets(page: Page) {
-	return await page.evaluate((pageURL: string) => {
+	return await page.evaluate(pageURL => {
 		const importedStylesheets = [];
 		for (const stylesheet of document.styleSheets) {
 			try {
@@ -67,7 +68,7 @@ async function getImportedStyleSheets(page: Page) {
 			} catch {
 				continue;
 			}
-			const baseURL = stylesheet.href || pageURL;
+			const baseURL = stylesheet.href || (pageURL as string);
 			for (const rule of stylesheet.cssRules) {
 				if (rule instanceof CSSImportRule) {
 					const url = new URL(rule.href, baseURL).href;
@@ -125,7 +126,7 @@ async function getMedia(page: Page) {
 
 	const imageSrcSets = await page.$$eval(
 		`img[srcset], picture > source[srcset]`,
-		(elems, pageURL: string) => {
+		(elems, pageURL) => {
 			const images = [];
 			for (const elem of elems as (HTMLImageElement | HTMLSourceElement)[]) {
 				images.push(
@@ -135,7 +136,7 @@ async function getMedia(page: Page) {
 						.filter(s => s.trim())
 						.map(part => {
 							const src = part.trim().split(/\s+/, 2)[0];
-							const url = new URL(src, pageURL).href;
+							const url = new URL(src, pageURL as string).href;
 							return {
 								type: ResourceType.image as const,
 								url,
@@ -152,7 +153,7 @@ async function getMedia(page: Page) {
 }
 
 async function getStyleSheetImages(page: Page) {
-	return await page.evaluate((pageURL: string) => {
+	return await page.evaluate(pageURL => {
 		const urls = [];
 		for (const stylesheet of document.styleSheets) {
 			try {
@@ -161,7 +162,7 @@ async function getStyleSheetImages(page: Page) {
 			} catch {
 				continue;
 			}
-			const baseURL = stylesheet.href || pageURL;
+			const baseURL = stylesheet.href || (pageURL as string);
 			for (const rule of stylesheet.cssRules) {
 				if (rule instanceof CSSStyleRule && rule.style.backgroundImage) {
 					urls.push(
@@ -183,7 +184,7 @@ async function getStyleSheetImages(page: Page) {
 }
 
 async function getFonts(page: Page) {
-	return await page.evaluate((pageURL: string) => {
+	return await page.evaluate(pageURL => {
 		const urls = [];
 		for (const stylesheet of document.styleSheets) {
 			try {
@@ -193,7 +194,7 @@ async function getFonts(page: Page) {
 				continue;
 			}
 
-			const baseURL = stylesheet.href || pageURL;
+			const baseURL = stylesheet.href || (pageURL as string);
 			for (const rule of stylesheet.cssRules) {
 				if (rule instanceof CSSFontFaceRule && (rule.style as any).src) {
 					const src = (rule.style as any).src as string;
