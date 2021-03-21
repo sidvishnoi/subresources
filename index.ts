@@ -1,5 +1,4 @@
-import puppeteer from "puppeteer";
-import { Page } from "puppeteer/lib/cjs/puppeteer/common/Page";
+import puppeteer, { Page } from "puppeteer";
 
 export const enum ResourceType {
 	stylesheet = "stylesheet",
