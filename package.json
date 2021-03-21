@@ -5,11 +5,12 @@
 	"license": "MIT",
 	"author": "Sid Vishnoi <sidvishnoi8@gmail.com> (https://sidvishnoi.github.io/)",
 	"main": "index.js",
+	"types": "index.d.ts",
 	"scripts": {
 		"prepare": "tsc -p tsconfig.json",
 		"start": "tsc -p tsconfig.json --watch"
 	},
-	"files": ["index.js"],
+	"files": ["index.js", "index.d.ts"],
 	"dependencies": {
 		"puppeteer": "^7"
 	},
