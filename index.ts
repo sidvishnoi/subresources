@@ -6,6 +6,7 @@ export const enum ResourceType {
 	image = "image",
 	video = "video",
 	audio = "audio",
+	object = "object",
 	iframe = "iframe",
 	font = "font",
 	manifest = "manifest",
@@ -239,7 +240,25 @@ async function getMiscResources(page: Page) {
 		})
 		.catch(() => null);
 
-	return [manifest].filter(
+	const dataObjects = await page.$$eval(
+		`object[data]`,
+		(elems, pageURL) => {
+			const objects = [];
+			for (const elem of elems as HTMLObjectElement[]) {
+				try {
+					const url = new URL(elem.data, pageURL as string);
+					objects.push({
+						type: ResourceType.object as const,
+						url: url.href,
+					});
+				} catch {}
+			}
+			return objects;
+		},
+		page.url(),
+	);
+
+	return [manifest, ...dataObjects].filter(
 		(resource): resource is NonNullable<typeof resource> => resource !== null,
 	);
 }
