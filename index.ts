@@ -175,6 +175,12 @@ async function getStyleSheetImages(page: Page) {
 							.filter((s): s is string => !!s)
 							.map(url => new URL(url, baseURL).href),
 					);
+				} else if (rule instanceof CSSStyleRule && rule.style.content) {
+					const match = rule.style.content.match(/url\("([^)]+)"\)/);
+					if (!match) continue;
+					const url = match[1].trim();
+					if (!url || new URL(url, baseURL).protocol === "data:") continue;
+					urls.push(new URL(url, baseURL).href);
 				}
 			}
 		}
