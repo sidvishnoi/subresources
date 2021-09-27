@@ -8,7 +8,7 @@
 	"types": "index.d.ts",
 	"scripts": {
 		"prepare": "tsc -p tsconfig.json",
-		"start": "tsc -p tsconfig.json --watch"
+		"dev": "tsc -p tsconfig.json --watch"
 	},
 	"files": [
 		"index.js",
