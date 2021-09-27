@@ -4,6 +4,7 @@ export const enum ResourceType {
 	stylesheet = "stylesheet",
 	script = "script",
 	image = "image",
+	favicon = "favicon",
 	video = "video",
 	audio = "audio",
 	object = "object",
@@ -37,6 +38,7 @@ export async function* getAllSubResources(
 		yield* await getMedia(page);
 		yield* await getStyleSheetImages(page);
 		yield* await getFonts(page);
+		yield* await getFavicons(page);
 		yield* await getIframes(page);
 		yield* await getMiscResources(page);
 	} catch (error) {
@@ -228,6 +230,25 @@ async function getIframes(page: Page) {
 		}
 		return iframes;
 	});
+}
+
+async function getFavicons(page: Page) {
+	return await page.$$eval(
+		`link[rel~='icon'], link[rel~='apple-touch-icon']`,
+		elems => {
+			const favicons = [];
+			for (const elem of elems as HTMLLinkElement[]) {
+				if (!elem.href) continue;
+				if (new URL(elem.href).protocol === "data:") continue;
+
+				favicons.push({
+					type: ResourceType.favicon as const,
+					url: elem.href,
+				});
+			}
+			return favicons;
+		},
+	);
 }
 
 async function getMiscResources(page: Page) {
