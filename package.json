@@ -15,9 +15,9 @@
 		"index.d.ts"
 	],
 	"dependencies": {
-		"puppeteer": "^10"
+		"puppeteer": "^13"
 	},
 	"devDependencies": {
-		"typescript": "^4.4"
+		"typescript": "^4.5"
 	}
 }
