@@ -18,6 +18,6 @@
 		"puppeteer": "^13"
 	},
 	"devDependencies": {
-		"typescript": "^4.5"
+		"typescript": "^4.6"
 	}
 }

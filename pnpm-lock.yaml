@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   puppeteer: ^13
-  typescript: ^4.5
+  typescript: ^4.6
 
 dependencies:
   puppeteer: 13.7.0
