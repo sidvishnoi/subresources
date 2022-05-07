@@ -4,6 +4,7 @@
 		"module": "commonjs",
 		"removeComments": false,
 		"declaration": true,
+		"sourceMap": true,
 		"strict": true,
 		"esModuleInterop": true
 	}
