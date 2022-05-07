@@ -9,6 +9,7 @@ export const enum ResourceType {
 	audio = "audio",
 	object = "object",
 	iframe = "iframe",
+	link = "link",
 	font = "font",
 	manifest = "manifest",
 }
@@ -18,8 +19,13 @@ export interface Resource {
 	url: string;
 }
 
+export interface Options {
+	links: boolean;
+}
+
 export async function* getAllSubResources(
 	url: URL,
+	options: Partial<Options> = {},
 ): AsyncGenerator<Resource, void, undefined> {
 	let caughtError;
 	const browser = await puppeteer.launch();
@@ -39,6 +45,7 @@ export async function* getAllSubResources(
 		yield* await getStyleSheetImages(page);
 		yield* await getFonts(page);
 		yield* await getFavicons(page);
+		if (options?.links) yield* await getLinks(page);
 		yield* await getIframes(page);
 		yield* await getMiscResources(page);
 	} catch (error) {
@@ -255,6 +262,19 @@ async function getFavicons(page: Page) {
 			return favicons;
 		},
 	);
+}
+
+async function getLinks(page: Page) {
+	return await page.$$eval(`a[href]`, elems => {
+		const links = [];
+		for (const elem of elems as HTMLAnchorElement[]) {
+			links.push({
+				type: ResourceType.link as const,
+				url: elem.href,
+			});
+		}
+		return links;
+	});
 }
 
 async function getMiscResources(page: Page) {
