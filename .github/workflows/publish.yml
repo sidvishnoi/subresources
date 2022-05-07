@@ -7,14 +7,17 @@ jobs:
     name: Build and Publish to npm
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 16
           registry-url: "https://registry.npmjs.org"
-      - run: yarn install --ignore-scripts
+      - uses: pnpm/action-setup@v2.1.0
+        with:
+          version: 6
+      - run: pnpm i
         env:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
-      - run: yarn publish --access=public
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.YARN_TOKEN}}
