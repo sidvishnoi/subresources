@@ -16,9 +16,9 @@
 		"index.js.map"
 	],
 	"dependencies": {
-		"puppeteer": "^13"
+		"puppeteer": "^14"
 	},
 	"devDependencies": {
-		"typescript": "^4.6"
+		"typescript": "^4.7"
 	}
 }
