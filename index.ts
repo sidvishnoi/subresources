@@ -267,7 +267,10 @@ async function getFavicons(page: Page) {
 async function getLinks(page: Page) {
 	return await page.$$eval(`a[href]`, elems => {
 		const links = [];
-		for (const elem of elems as HTMLAnchorElement[]) {
+		for (const elem of elems) {
+			if (!(elem instanceof HTMLAnchorElement)) {
+				continue; // exclude SVGAElement
+			}
 			links.push({
 				type: ResourceType.link as const,
 				url: elem.href,
