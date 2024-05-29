@@ -7,13 +7,11 @@ jobs:
     name: Build and Publish to npm
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
         with:
-          version: 6
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
+          node-version-file: ".nvmrc"
           registry-url: "https://registry.npmjs.org"
           cache: pnpm
       - run: pnpm i --frozen-lockfile
