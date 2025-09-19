@@ -1,18 +1,17 @@
-import puppeteer, { Page } from "puppeteer";
+import puppeteer, { type Page } from "puppeteer";
 
-export const enum ResourceType {
-	stylesheet = "stylesheet",
-	script = "script",
-	image = "image",
-	favicon = "favicon",
-	video = "video",
-	audio = "audio",
-	object = "object",
-	iframe = "iframe",
-	link = "link",
-	font = "font",
-	manifest = "manifest",
-}
+export type ResourceType =
+	| "stylesheet"
+	| "script"
+	| "image"
+	| "favicon"
+	| "video"
+	| "audio"
+	| "object"
+	| "iframe"
+	| "link"
+	| "font"
+	| "manifest";
 
 export interface Resource {
 	type: ResourceType;
@@ -60,7 +59,7 @@ async function getStyleSheets(page: Page) {
 	return await page.$$eval(`link[rel~="stylesheet"]`, elems => {
 		return (elems as HTMLLinkElement[]).map(elem => {
 			return {
-				type: ResourceType.stylesheet as const,
+				type: "stylesheet" as const,
 				url: elem.href,
 			};
 		});
@@ -82,7 +81,7 @@ async function getImportedStyleSheets(page: Page) {
 				if (rule instanceof CSSImportRule) {
 					const url = new URL(rule.href, baseURL).href;
 					importedStylesheets.push({
-						type: ResourceType.stylesheet as const,
+						type: "stylesheet" as const,
 						url,
 					});
 				}
@@ -96,7 +95,7 @@ async function getScripts(page: Page) {
 	return await page.$$eval(`script[src]`, elems => {
 		return (elems as HTMLScriptElement[]).map(elem => {
 			return {
-				type: ResourceType.script as const,
+				type: "script" as const,
 				url: elem.src,
 			};
 		});
@@ -112,14 +111,14 @@ async function getMedia(page: Page) {
 			for (const elem of elems as MediaResource[]) {
 				let type;
 				if (elem instanceof HTMLImageElement) {
-					type = ResourceType.image as const;
+					type = "image" as const;
 				} else if (elem instanceof HTMLVideoElement) {
-					type = ResourceType.video as const;
+					type = "video" as const;
 				} else if (elem instanceof HTMLSourceElement) {
 					if (elem.parentElement instanceof HTMLVideoElement) {
-						type = ResourceType.video as const;
+						type = "video" as const;
 					} else {
-						type = ResourceType.audio as const;
+						type = "audio" as const;
 					}
 				} else {
 					throw new Error("Reached unreachable code.");
@@ -147,7 +146,7 @@ async function getMedia(page: Page) {
 							const src = part.trim().split(/\s+/, 2)[0];
 							const url = new URL(src, pageURL as string).href;
 							return {
-								type: ResourceType.image as const,
+								type: "image" as const,
 								url,
 							};
 						}),
@@ -192,7 +191,7 @@ async function getStyleSheetImages(page: Page) {
 			}
 		}
 		return urls.map(url => ({
-			type: ResourceType.image as const,
+			type: "image" as const,
 			url,
 		}));
 	}, page.url());
@@ -226,7 +225,7 @@ async function getFonts(page: Page) {
 		}
 
 		return urls.map(url => ({
-			type: ResourceType.font as const,
+			type: "font" as const,
 			url,
 		}));
 	}, page.url());
@@ -237,7 +236,7 @@ async function getIframes(page: Page) {
 		const iframes = [];
 		for (const elem of elems as HTMLIFrameElement[]) {
 			iframes.push({
-				type: ResourceType.iframe as const,
+				type: "iframe" as const,
 				url: elem.src,
 			});
 		}
@@ -255,7 +254,7 @@ async function getFavicons(page: Page) {
 				if (new URL(elem.href).protocol === "data:") continue;
 
 				favicons.push({
-					type: ResourceType.favicon as const,
+					type: "favicon" as const,
 					url: elem.href,
 				});
 			}
@@ -272,7 +271,7 @@ async function getLinks(page: Page) {
 				continue; // exclude SVGAElement
 			}
 			links.push({
-				type: ResourceType.link as const,
+				type: "link" as const,
 				url: elem.href,
 			});
 		}
@@ -284,7 +283,7 @@ async function getMiscResources(page: Page) {
 	const manifest = await page
 		.$eval(`link[rel~="manifest"]`, elem => {
 			return {
-				type: ResourceType.manifest as const,
+				type: "manifest" as const,
 				url: (elem as HTMLLinkElement).href,
 			};
 		})
@@ -298,7 +297,7 @@ async function getMiscResources(page: Page) {
 				try {
 					const url = new URL(elem.data, pageURL as string);
 					objects.push({
-						type: ResourceType.object as const,
+						type: "object" as const,
 						url: url.href,
 					});
 				} catch {}
