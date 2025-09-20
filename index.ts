@@ -1,4 +1,4 @@
-import puppeteer, { type Page } from "puppeteer";
+import puppeteer, { type Page, type LaunchOptions } from "puppeteer";
 
 export type ResourceType =
 	| "stylesheet"
@@ -20,6 +20,7 @@ export interface Resource {
 
 export interface Options {
 	links: boolean;
+	puppeteerOptions?: LaunchOptions;
 }
 
 export async function* getAllSubResources(
@@ -27,7 +28,7 @@ export async function* getAllSubResources(
 	options: Partial<Options> = {},
 ): AsyncGenerator<Resource, void, undefined> {
 	let caughtError;
-	const browser = await puppeteer.launch();
+	const browser = await puppeteer.launch(options.puppeteerOptions);
 	try {
 		const page = await browser.newPage();
 		const response = await page.goto(url.href, {});
