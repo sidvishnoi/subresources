@@ -4,7 +4,7 @@ import type { Options, Resource, ResourceType } from "./types.js";
 
 function mapResourceType(
 	response: HTTPResponse,
-	mainFrameUrl: string,
+	_mainFrameUrl: string,
 ): ResourceType | null {
 	const request = response.request();
 	const type = request.resourceType();
