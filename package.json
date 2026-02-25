@@ -11,10 +11,22 @@
 		"dev": "tsc -p tsconfig.json --watch"
 	},
 	"files": [
-		"index.js",
-		"index.d.ts",
-		"index.js.map"
+		"dist"
 	],
+	"exports": {
+		".": {
+			"types": "./dist/dom.d.ts",
+			"import": "./dist/dom.js"
+		},
+		"./dom": {
+			"types": "./dist/dom.d.ts",
+			"import": "./dist/dom.js"
+		},
+		"./network": {
+			"types": "./dist/network.d.ts",
+			"import": "./dist/network.js"
+		}
+	},
 	"type": "module",
 	"dependencies": {
 		"puppeteer": "^24"

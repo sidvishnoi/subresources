@@ -9,6 +9,7 @@
 		"strict": true,
 		"verbatimModuleSyntax": true,
 		"erasableSyntaxOnly": true,
-		"esModuleInterop": true
+		"esModuleInterop": true,
+		"outDir": "dist"
 	}
 }

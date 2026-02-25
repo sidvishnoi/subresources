@@ -1,27 +1,6 @@
-import puppeteer, { type Page, type LaunchOptions } from "puppeteer";
+import puppeteer, { type Page } from "puppeteer";
 
-export type ResourceType =
-	| "stylesheet"
-	| "script"
-	| "image"
-	| "favicon"
-	| "video"
-	| "audio"
-	| "object"
-	| "iframe"
-	| "link"
-	| "font"
-	| "manifest";
-
-export interface Resource {
-	type: ResourceType;
-	url: string;
-}
-
-export interface Options {
-	links: boolean;
-	puppeteerOptions?: LaunchOptions;
-}
+import type { Options, Resource } from "./types.js";
 
 export async function* getAllSubResources(
 	url: URL,
