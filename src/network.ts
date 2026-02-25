@@ -1,7 +1,4 @@
-import puppeteer, {
-	type LaunchOptions,
-	type HTTPResponse,
-} from "puppeteer";
+import puppeteer, { type HTTPResponse } from "puppeteer";
 
 import type { Options, Resource, ResourceType } from "./types.js";
 

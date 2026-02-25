@@ -1,6 +1,6 @@
-import puppeteer, { type Page, type LaunchOptions } from "puppeteer";
+import puppeteer, { type Page } from "puppeteer";
 
-import type { Options, Resource, ResourceType } from "./types.js";
+import type { Options, Resource } from "./types.js";
 
 export async function* getAllSubResources(
 	url: URL,
