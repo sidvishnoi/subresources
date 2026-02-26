@@ -25,8 +25,13 @@
 		"./network": {
 			"types": "./dist/network.d.ts",
 			"import": "./dist/network.js"
+		},
+		"./types": {
+			"types": "./dist/types.d.ts",
+			"import": "./dist/types.js"
 		}
 	},
+	"types": "./dist/types.d.ts",
 	"type": "module",
 	"dependencies": {
 		"puppeteer": "^24"
