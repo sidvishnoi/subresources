@@ -31,6 +31,7 @@
 			"import": "./dist/types.js"
 		}
 	},
+	"types": "./dist/types.d.ts",
 	"type": "module",
 	"dependencies": {
 		"puppeteer": "^24"
