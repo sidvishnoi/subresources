@@ -1,11 +1,11 @@
 {
 	"name": "subresources",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"repository": "git@github.com:sidvishnoi/subresources.git",
 	"license": "MIT",
 	"author": "Sid Vishnoi <sidvishnoi8@gmail.com> (https://sidvishnoi.com)",
 	"main": "index.js",
-	"types": "index.d.ts",
+	"types": "./dist/types.d.ts",
 	"scripts": {
 		"prepare": "tsc -p tsconfig.json",
 		"dev": "tsc -p tsconfig.json --watch"
@@ -31,7 +31,6 @@
 			"import": "./dist/types.js"
 		}
 	},
-	"types": "./dist/types.d.ts",
 	"type": "module",
 	"dependencies": {
 		"puppeteer": "^24"
