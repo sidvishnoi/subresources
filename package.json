@@ -33,11 +33,11 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"puppeteer": "^24"
+		"puppeteer": "^25"
 	},
-	"packageManager": "pnpm@10.30.2",
+	"packageManager": "pnpm@12.18.0",
 	"devDependencies": {
-		"@types/node": "^24.10.13",
-		"typescript": "^5.9"
+		"@types/node": "^26.6.6",
+		"typescript": "^7.0"
 	}
 }
