@@ -1,7 +1,10 @@
 {
 	"name": "subresources",
 	"version": "3.0.1",
-	"repository": "git@github.com:sidvishnoi/subresources.git",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sidvishnoi/subresources.git"
+	},
 	"license": "MIT",
 	"author": "Sid Vishnoi <sidvishnoi8@gmail.com> (https://sidvishnoi.com)",
 	"main": "index.js",
