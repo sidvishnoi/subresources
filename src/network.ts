@@ -97,8 +97,8 @@ export async function* getAllSubResources(
 		}
 
 		if (options.links) {
-			const links = await page.$$eval("a[href]", elems =>
-				(elems as HTMLAnchorElement[])
+			const links = await page.evaluate(() =>
+				[...document.querySelectorAll("a[href]")]
 					.filter(el => el instanceof HTMLAnchorElement)
 					.map(el => ({
 						type: "link" as const,
